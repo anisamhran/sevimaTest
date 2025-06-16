@@ -9,7 +9,7 @@
              alt="Avatar" class="w-20 h-20 rounded-full object-cover">
         <div>
             <h1 class="text-xl font-bold">{{ $user->name }}</h1>
-            <p class="text-sm text-gray-500">@{{ $user->username }}</p>
+            <p class="text-sm text-gray-500">{{ '@' . $user->username }}</p>
             <p class="text-sm text-gray-600">{{ $user->bio ?? 'Tidak ada bio.' }}</p>
 
             <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
@@ -35,13 +35,14 @@
     @if ($posts->count())
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             @foreach ($posts as $post)
-                <div class="bg-white rounded-xl shadow overflow-hidden">
-                    <img src="{{ asset('storage/' . $post->image) }}" alt="post" class="w-full h-48 object-cover">
-                </div>
-            @endforeach
+    <a href="{{ route('posts.show', $post) }}" class="block bg-white rounded-xl shadow overflow-hidden hover:opacity-90 transition">
+        <img src="{{ asset('storage/' . $post->image) }}" alt="post" class="w-full h-48 object-cover">
+    </a>
+@endforeach
+
         </div>
     @else
-        <p class="text-gray-500 text-center">Belum ada postingan.</p>
+        <div class="text-gray-500 mt-6 text-center">Kamu belum membuat postingan apa pun.</div>
     @endif
 </div>
 @endsection

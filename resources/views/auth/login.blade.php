@@ -56,7 +56,12 @@
         <x-auth-session-status class="mb-4" :status="session('status')" />
         <x-input-error :messages="$errors->all()" class="mb-4" />
 
-
+            @if (session('success'))
+            <div class="mb-4 text-green-600 text-sm text-center font-medium">
+                {{ session('success') }}
+            </div>
+        @endif
+        
         <form method="POST" action="{{ route('login') }}">
             @csrf
 

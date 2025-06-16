@@ -16,7 +16,7 @@
             {{-- Info User --}}
             <div>
                 <h1 class="text-2xl font-bold">{{ $user->name }}</h1>
-                <p class="text-sm text-gray-500">@{{ $user->username }}</p>
+                <p class="text-sm text-gray-500">{{ '@' . $user->username }}</p>
                 <p class="mt-1 text-gray-700 text-sm">{{ $user->bio ?? 'Belum ada bio.' }}</p>
 
                 {{-- Tambahan Informasi --}}
@@ -38,11 +38,16 @@
         </div>
 
         {{-- Tombol Edit --}}
+        @if (auth()->check() && auth()->user()->username === $user->username)
         <div class="mt-4 sm:mt-0">
             <a href="{{ route('profile.edit') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
                 Edit Profil
             </a>
         </div>
+    @endif
+    
+
+
     </div>
 
     {{-- Postingan --}}
@@ -51,10 +56,11 @@
     @if ($posts->count())
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             @foreach ($posts as $post)
-                <div class="bg-white rounded-xl shadow overflow-hidden">
-                    <img src="{{ asset('storage/' . $post->image) }}" alt="post" class="w-full h-48 object-cover">
-                </div>
-            @endforeach
+    <a href="{{ route('posts.show', $post) }}" class="block bg-white rounded-xl shadow overflow-hidden hover:opacity-90 transition">
+        <img src="{{ asset('storage/' . $post->image) }}" alt="post" class="w-full h-48 object-cover">
+    </a>
+@endforeach
+
         </div>
     @else
         <div class="text-gray-500 mt-6 text-center">Kamu belum membuat postingan apa pun.</div>

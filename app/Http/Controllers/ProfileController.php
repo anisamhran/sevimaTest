@@ -36,8 +36,9 @@ public function publicProfile($username)
     $user = \App\Models\User::where('username', $username)->firstOrFail();
     $posts = $user->posts()->latest()->get();
     $isFollowing = auth()->check() && auth()->user()->following()->where('user_id', $user->id)->exists();
+    $isCurrentUser = auth()->check() && auth()->user()->id === $user->id;
 
-    return view('profile.public', compact('user', 'posts', 'isFollowing'));
+    return view('profile.public', compact('user', 'posts', 'isFollowing','isCurrentUser'));
 }
 
     /**

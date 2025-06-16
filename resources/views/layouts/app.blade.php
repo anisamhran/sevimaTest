@@ -72,27 +72,47 @@
 
 
         <!-- Right Sidebar -->
-        <!-- Right Sidebar -->
 @auth
 @php 
     $user = auth()->user(); 
-    $hideRightSidebar = in_array(Route::currentRouteName(), ['profile.me', 'profile.edit']);
+$hideRightSidebar = in_array(Route::currentRouteName(), ['profile.me', 'profile.edit']) 
+    || (Route::currentRouteName() === 'user.profile' && request()->route('username') === auth()->user()->username);
 @endphp
 
 @unless ($hideRightSidebar)
     <aside class="w-72 hidden lg:block ml-6 pt-10 sticky top-0 h-screen">
         {{-- User Info --}}
-        <div class="flex items-center space-x-4 mb-6">
-            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" 
-                 alt="Avatar" class="w-10 h-10 rounded-full object-cover">
-            <div>
-                <p class="font-semibold">{{ $user->username }}</p>
-                <p class="text-sm text-gray-500">{{ $user->name }}</p>
-            </div>
-        </div>
+        {{-- User Info --}}
+<a href="{{ route('user.profile', $user->username) }}" class="flex items-center space-x-4 mb-6 hover:bg-gray-100 p-2 rounded transition">
+    <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" 
+         alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+    <div>
+        <p class="font-semibold text-gray-800">{{ $user->username }}</p>
+        <p class="text-sm text-gray-500">{{ $user->name }}</p>
+    </div>
+</a>
 
         {{-- Placeholder --}}
-        <p class="text-gray-400 text-sm">Rekomendasi pengguna nanti di sini</p>
+{{-- Rekomendasi Akun --}}
+<div class="mt-8">
+    <h4 class="text-sm font-semibold text-gray-700 mb-3">Rekomendasi Akun</h4>
+    @php
+    $suggestedUsers = $suggestedUsers ?? collect(); // fallback kalau belum dikirim dari controller
+@endphp
+
+    @forelse ($suggestedUsers as $suggested)
+        <a href="{{ route('user.profile', $suggested->username) }}" class="flex items-center gap-3 mb-3 hover:bg-gray-100 p-2 rounded transition">
+            <img src="{{ $suggested->profile_picture ? asset('storage/' . $suggested->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($suggested->name) }}" 
+                 class="w-8 h-8 rounded-full object-cover" alt="avatar">
+            <div>
+                <p class="text-sm font-semibold">{{ '@' . $suggested->username }}</p>
+                <p class="text-xs text-gray-500">{{ $suggested->name }}</p>
+            </div>
+        </a>
+    @empty
+        <p class="text-sm text-gray-500">Tidak ada saran akun saat ini.</p>
+    @endforelse
+</div>
     </aside>
 @endunless
 @endauth

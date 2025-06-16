@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/following', [FollowController::class, 'followingList'])->name('profile.following');
 
-    Route::view('/explore', 'explore')->name('explore');
+    Route::get('/explore', [\App\Http\Controllers\ExploreController::class, 'index'])->name('explore');
     Route::view('/notifications', 'notifications')->name('notifications');
 
     Route::get('/search/users', [\App\Http\Controllers\SearchController::class, 'live'])->name('search.live');

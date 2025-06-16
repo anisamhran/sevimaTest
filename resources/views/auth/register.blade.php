@@ -2,6 +2,14 @@
     <div class="w-full sm:max-w-md mx-auto mt-10 bg-white shadow-md rounded-xl p-6">
         <h2 class="text-2xl font-semibold text-center mb-6 text-blue-600">Daftar ke InstaApp</h2>
 
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <x-input-error :messages="$errors->all()" class="mb-4" />
+        @if (session('success'))
+            <div class="mb-4 text-green-600 text-sm text-center font-medium">
+                {{ session('success') }}
+            </div> 
+        @endif
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
